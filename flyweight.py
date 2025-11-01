@@ -7,6 +7,15 @@ class Order:
         time.sleep(3)  # simulate time-consuming creation
         print(f"Done cooking {name} order!")
 
+class OrderFactory:
+    _cache = {}
+
+    @classmethod
+    def get_order(cls, name):
+        if name not in cls._cache:
+            cls._cache[name] = Order(name)
+        return cls._cache[name]
+
 class RestaurantView:
     def show_order(self, order):
         print(f"Order for: {order.name} | ID: {id(order)}\n")
@@ -19,7 +28,7 @@ class RestaurantController:
         self.view = RestaurantView()
 
     def create_order(self, food_name):
-        order = Order(food_name)
+        order = OrderFactory.get_order(food_name)
         self.view.show_order(order)
         return order
 
